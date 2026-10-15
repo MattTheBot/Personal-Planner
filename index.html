@@ -5,19 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#ffffff" />
 <meta name="description" content="AI-powered school planner" />
-<title>School Planner</title>
+<title>Portal · Planner</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%235C9EAD'/%3E%3Cpath d='M18 20h28v5H18zM18 30h28v5H18zM18 40h18v5H18z' fill='%23fff'/%3E%3C/svg%3E" />
 <link rel="manifest" href="manifest.json" />
 <link rel="stylesheet" href="style.css" />
 </head>
-<body class="nav-top">
+<body class="nav-left">
 
-<!-- ============ AUTH ============ -->
 <section id="authScreen" class="auth-screen">
   <div class="auth-card">
     <div class="brand">
       <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#5C9EAD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h3M8 18h6"/></svg>
-      <h1>School Planner</h1>
+      <h1>Portal · Planner</h1>
     </div>
     <p class="muted">Sign in to sync assignments, time-boxing, and settings across devices.</p>
 
@@ -44,9 +43,7 @@
   </div>
 </section>
 
-<!-- ============ APP ============ -->
 <div id="app" hidden>
-
   <nav id="nav">
     <button class="nav-btn" data-view="home">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
@@ -61,8 +58,12 @@
       <span>Assignments</span>
     </button>
     <button class="nav-btn" data-view="timebox">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h2M14 14h2M8 18h2M14 18h2"/></svg>
       <span>Time-Boxing</span>
+    </button>
+    <button class="nav-btn" data-view="notes">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+      <span>Notes</span>
     </button>
     <button class="nav-btn" data-view="settings">
       <svg viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1.5 14h5M9.5 8h5M17.5 16h5"/></svg>
@@ -72,7 +73,6 @@
 
   <main id="main">
 
-    <!-- HOME -->
     <section id="view-home" class="view">
       <header class="page-head">
         <div>
@@ -82,6 +82,22 @@
         <div id="homeStats" class="stat-row"></div>
       </header>
 
+      <div class="dash-grid">
+        <div class="card">
+          <h3 class="card-title">Today</h3>
+          <div id="homeToday"></div>
+        </div>
+        <div class="card">
+          <h3 class="card-title">This week</h3>
+          <div id="homeWeek"></div>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Quick notes</h3>
+          <div id="homeNotes"></div>
+        </div>
+      </div>
+
+      <h3 class="section-title">Priority buckets</h3>
       <div class="buckets">
         <div class="bucket" data-b="upcoming">
           <div class="bucket-head"><span class="dot"></span>Upcoming<span class="count" id="count-upcoming">0</span></div>
@@ -102,18 +118,17 @@
       </div>
     </section>
 
-    <!-- PORTAL -->
     <section id="view-portal" class="view">
       <header class="page-head">
         <div>
           <h2>Portal</h2>
-          <p class="muted">Paste anything — a syllabus page, a whiteboard photo transcript, a teacher's email. The AI extracts structured assignments.</p>
+          <p class="muted">Paste anything — a syllabus, an email, a photo transcript. The AI structures it into assignments.</p>
         </div>
       </header>
 
       <div class="card">
-        <textarea id="portalInput" rows="9" placeholder="e.g.&#10;Chem lab report due next Friday, about 2 hours of work.&#10;Maths ex 4B questions 1-12 for tomorrow.&#10;History essay on WW1 — draft due 3 weeks from now, final after half term."></textarea>
-        <div class="row">
+        <textarea id="portalInput" rows="9" placeholder="e.g.&#10;Chem lab report due next Friday, about 2 hours.&#10;Maths ex 4B q1-12 for tomorrow.&#10;History essay draft due week 3 day 2."></textarea>
+        <div class="row" style="margin-top:12px">
           <button id="btnParse" class="btn primary">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z"/></svg>
             Parse with AI
@@ -121,11 +136,12 @@
           <button id="btnClearPortal" class="btn">Clear</button>
           <span id="parseStatus" class="status"></span>
         </div>
+        <div id="parseStream" class="stream-box" hidden></div>
       </div>
 
       <div id="previewWrap" class="card" hidden>
         <h3 class="card-title">Review before saving</h3>
-        <p class="muted small">Edit anything the AI got wrong. Nothing is written to your account until you press Save.</p>
+        <p class="muted small">Edit anything the AI got wrong. Nothing saves until you press Save.</p>
         <div id="previewList"></div>
         <div class="row end">
           <button id="btnDiscardParsed" class="btn">Discard all</button>
@@ -134,7 +150,6 @@
       </div>
     </section>
 
-    <!-- ASSIGNMENTS -->
     <section id="view-assignments" class="view">
       <header class="page-head">
         <div><h2>Assignments</h2></div>
@@ -145,7 +160,9 @@
         <h3 class="card-title">New assignment</h3>
         <div class="grid-2">
           <label class="field">Title<input id="mTitle" type="text" placeholder="Chapter 7 problems" /></label>
-          <label class="field">Subject<input id="mSubject" type="text" placeholder="Physics" /></label>
+          <label class="field">Subject
+            <select id="mSubjectId"></select>
+          </label>
           <label class="field">Due date<input id="mDue" type="date" /></label>
           <label class="field">Estimated minutes<input id="mMins" type="number" min="0" step="5" placeholder="45" /></label>
         </div>
@@ -168,7 +185,6 @@
       </div>
     </section>
 
-    <!-- TIMEBOX -->
     <section id="view-timebox" class="view">
       <header class="page-head">
         <div>
@@ -176,31 +192,45 @@
           <p class="muted" id="tbSubtitle">—</p>
         </div>
         <div class="row">
-          <button id="tbPrev" class="btn">‹</button>
-          <button id="tbToday" class="btn">Today</button>
-          <button id="tbTomorrow" class="btn">Tomorrow</button>
-          <button id="tbNext" class="btn">›</button>
-          <input id="tbDate" type="date" />
+          <button id="tbPrevWeek" class="btn">‹ Prev</button>
+          <button id="tbThisWeek" class="btn">This week</button>
+          <button id="tbNextWeek" class="btn">Next ›</button>
+          <div class="zoom-group">
+            <button id="tbZoomOut" class="btn" title="Zoom out">−</button>
+            <span id="tbZoomLabel" class="zoom-label">30 min</span>
+            <button id="tbZoomIn" class="btn" title="Zoom in">+</button>
+          </div>
+          <button id="tbAddCustom" class="btn primary">+ Custom slot</button>
         </div>
       </header>
 
-      <div class="card no-pad">
-        <div id="tbGrid" class="tb-grid"></div>
+      <div class="card no-pad tb-week-card">
+        <div id="tbWeek" class="tb-week"></div>
       </div>
     </section>
 
-    <!-- SETTINGS -->
+    <section id="view-notes" class="view">
+      <header class="page-head">
+        <div>
+          <h2>Notes</h2>
+          <p class="muted">Quick thoughts, reminders, anything not worth an assignment.</p>
+        </div>
+        <button id="btnNewNote" class="btn primary">+ New note</button>
+      </header>
+      <div id="notesGrid" class="notes-grid"></div>
+    </section>
+
     <section id="view-settings" class="view">
       <header class="page-head"><div><h2>Settings</h2></div></header>
 
       <div class="card">
         <h3 class="card-title">AI</h3>
-        <p class="muted small">Your key is stored in your own Firestore document and is only readable by your account. It never leaves your device except to call the provider directly.</p>
+        <p class="muted small">Your key is stored in your account and only readable by you.</p>
         <label class="field">Provider
           <select id="setProvider">
             <option value="openrouter">OpenRouter — free models (CORS-enabled)</option>
-            <option value="zai">Z.ai — GLM Flash (CORS-blocked in browsers)</option>
-            <option value="groq">Groq — Llama (CORS-blocked in browsers)</option>
+            <option value="zai">Z.ai — GLM Flash (CORS-blocked)</option>
+            <option value="groq">Groq — Llama (CORS-blocked)</option>
           </select>
         </label>
         <label class="field">API key
@@ -210,24 +240,26 @@
           <select id="setModel"></select>
         </label>
         <div class="row"><button id="btnTestKey" class="btn">Test connection</button><span id="keyStatus" class="status"></span></div>
-        <p class="muted small" style="margin-top:14px">
-          <strong>OpenRouter (recommended):</strong> openrouter.ai → Keys → create key. Free tier: 50 requests/day, no card.<br>
-          <strong>Z.ai and Groq:</strong> listed only for completeness — both refuse browser requests, so they will not work here.
-        </p>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">Subjects</h3>
+        <p class="muted small">Set your subjects with colours. The AI uses this list to categorise parsed assignments, and time-box entries inherit the colour.</p>
+        <div id="subjectList"></div>
+        <button id="btnAddSubject" class="btn">+ Add subject</button>
       </div>
 
       <div class="card">
         <h3 class="card-title">Academic calendar</h3>
-        <p class="muted small">Set the date that was <strong>Day 1 of Week 1</strong>. Week and day numbers are calculated from this, and every AI call receives the current values.</p>
+        <p class="muted small">Set the date that was <strong>Day 1 of Week 1</strong>. The AI receives current values on every call.</p>
         <div class="grid-2">
-          <label class="field">Term start (Day 1, Week 1)<input id="setTermStart" type="date" /></label>
+          <label class="field">Term start<input id="setTermStart" type="date" /></label>
           <label class="field">Days per school week<input id="setSchoolDays" type="number" min="1" max="7" value="5" /></label>
         </div>
       </div>
 
       <div class="card">
         <h3 class="card-title">Breaks &amp; holidays</h3>
-        <p class="muted small">The AI is told about these so it can resolve "after half term" and similar phrasing.</p>
         <div id="breakList"></div>
         <button id="btnAddBreak" class="btn">+ Add break</button>
       </div>
@@ -236,7 +268,7 @@
         <h3 class="card-title">Interface</h3>
         <label class="field">Navigation position
           <select id="setNavPos">
-            <option value="top">Top, centred</option>
+            <option value="top">Top</option>
             <option value="left">Left side</option>
           </select>
         </label>
@@ -260,6 +292,11 @@
 </div>
 
 <div id="toast" class="toast" hidden></div>
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-grip"></div>
+  <div id="sheetContent"></div>
+</div>
 
 <script type="module" src="app.js"></script>
 </body>
